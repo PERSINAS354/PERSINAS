@@ -1,13 +1,15 @@
 {
+  "id": "./persinas_asad_absensi.html",
   "name": "Absensi PERSINAS ASAD",
   "short_name": "PERSINAS ASAD",
-  "description": "Sistem Absensi Latihan PERSINAS ASAD",
+  "description": "Sistem Absensi Latihan PERSINAS ASAD Boyolali Barat",
   "start_url": "./persinas_asad_absensi.html",
   "scope": "./",
   "display": "standalone",
   "background_color": "#0d0d0d",
   "theme_color": "#c8102e",
-  "orientation": "portrait",
+  "orientation": "portrait-primary",
+  "lang": "id",
   "icons": [
     {
       "src": "persinas-asad-.png",

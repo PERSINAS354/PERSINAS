@@ -1057,9 +1057,8 @@ let deferredInstall=null;
 window.addEventListener('beforeinstallprompt',e=>{
   e.preventDefault();
   deferredInstall=e;
-  // Tampilkan prompt custom setelah 2 detik
-  if(!localStorage.getItem('pwa_installed')&&!localStorage.getItem('pwa_dismissed')){
-    setTimeout(()=>{document.getElementById('install-prompt').style.display='flex';},2000);
+  if(!localStorage.getItem('pwa_installed')){
+    setTimeout(()=>{document.getElementById('install-prompt').style.display='flex';},1500);
   }
 });
 window.addEventListener('appinstalled',()=>{
@@ -1072,7 +1071,6 @@ function pasangApp(){
 }
 function tutupInstall(){
   document.getElementById('install-prompt').style.display='none';
-  localStorage.setItem('pwa_dismissed','1');
 }
 document.addEventListener('keydown',e=>{if(e.key==='Enter'&&document.getElementById('login-screen').style.display!=='none')doLogin();});
 document.addEventListener('DOMContentLoaded',()=>{
