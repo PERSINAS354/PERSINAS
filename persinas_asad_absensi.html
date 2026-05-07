@@ -321,7 +321,6 @@ function om(id){document.getElementById(id).classList.add('open')}
 function cm(id){document.getElementById(id).classList.remove('open')}
 function scf(i,m,s,yt,cb){document.getElementById('cf-i').textContent=i;document.getElementById('cf-m').textContent=m;document.getElementById('cf-s').textContent=s||'';document.getElementById('cf-y').textContent=yt||'Hapus';CFCB=cb;document.getElementById('cf-dlg').classList.add('open')}
 function ccf(){document.getElementById('cf-dlg').classList.remove('open');CFCB=null}
-document.getElementById('cf-y').onclick=()=>{if(CFCB)CFCB();ccf()};
 function fd(d){if(!d)return'-';const x=new Date(d+'T00:00:00');return x.toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'})}
 function fi(n){return(n||'?').split(' ').slice(0,2).map(w=>w[0]).join('').toUpperCase()}
 function ea(s){return(s||'').replace(/'/g,'&#39;').replace(/"/g,'&quot;')}
@@ -1169,17 +1168,17 @@ if(isPWA()){
 }
 document.addEventListener('keydown',e=>{if(e.key==='Enter'&&document.getElementById('login-screen').style.display!=='none')doLogin();});
 document.addEventListener('DOMContentLoaded',()=>{
+  // Bind confirm dialog button
+  document.getElementById('cf-y').onclick=()=>{if(CFCB)CFCB();ccf();};
   // Sembunyikan login screen dulu kalau ada sesi tersimpan
   const _s=localStorage.getItem('persinas_s');
-  console.log('[PERSINAS] localStorage persinas_s:', _s ? 'ADA' : 'KOSONG');
   if(_s){
     try{
       const _p=JSON.parse(_s);
-      console.log('[PERSINAS] Data sesi:', _p&&_p.id ? 'VALID (id='+_p.id+')' : 'INVALID');
       if(_p&&_p.id){
         document.getElementById('login-screen').style.display='none';
       }
-    }catch(e){console.error('[PERSINAS] Parse error:',e);}
+    }catch(e){}
   }
   checkSaved();
   if('serviceWorker' in navigator){
