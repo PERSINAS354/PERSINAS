@@ -707,42 +707,50 @@ async function unduhRekapPNG(){
   if(!CS)return;
   toast('Membuat PNG...','');
   try{
-    const[pesData,absData]=await Promise.all([
-      sf('peserta?kelompok_id=eq.'+CU.kelompok_id+'&order=nama.asc'),
-      sf('absensi?sesi_id=eq.'+CS.id+'&select=peserta_id,status')
-    ]);
-    const absMap={};absData.forEach(a=>{absMap[a.peserta_id]=a.status;});
+    const absData=await sf('absensi?sesi_id=eq.'+CS.id+'&select=status');
+    const total=await sf('peserta?kelompok_id=eq.'+CU.kelompok_id+'&select=id');
     const h=absData.filter(a=>a.status==='hadir').length;
     const iz=absData.filter(a=>a.status==='izin').length;
     const al=absData.filter(a=>a.status==='alpha').length;
+    const tot=total.length;
+    const pct=tot?Math.round(h/tot*100):0;
     const kelNama=CU.kelompok_nama||(KL.find(x=>x.id===CU.kelompok_id)||{}).nama||'-';
-    const rows=pesData.map((p,i)=>{
-      const st=absMap[p.id]||'';
-      const stLbl=st==='hadir'?'Hadir':st==='izin'?'Izin':st==='alpha'?'Alpha':'-';
-      const stColor=st==='hadir'?'#16a34a':st==='izin'?'#ca8a04':st==='alpha'?'#dc2626':'#999';
-      const bg=i%2===0?'#fff':'#f8f8f8';
-      return'<tr style="background:'+bg+'"><td style="padding:7px 12px;border:1px solid #ddd;text-align:center;color:#666">'+(i+1)+'</td><td style="padding:7px 12px;border:1px solid #ddd;font-weight:600">'+p.nama+'</td><td style="padding:7px 12px;border:1px solid #ddd;text-align:center">'+(p.jenis_kelamin==='Perempuan'?'P':'L')+'</td><td style="padding:7px 12px;border:1px solid #ddd;text-align:center;font-weight:700;color:'+stColor+'">'+stLbl+'</td></tr>';
-    }).join('');
     const cv=document.getElementById('rpt-cv');
     cv.innerHTML=
-      '<div style="padding:32px;font-family:Helvetica Neue,Arial,sans-serif;color:#000;min-width:600px">'+
-        '<div style="text-align:center;margin-bottom:16px">'+
-          '<img src="persinas-asad-.png" style="width:70px;height:70px;object-fit:contain;margin-bottom:8px"><br>'+
-          '<div style="font-size:15px;font-weight:700">REKAP ABSENSI LATIHAN</div>'+
-          '<div style="font-size:13px;font-weight:700;color:#16a34a">PERSINAS ASAD — DAERAH BOYOLALI BARAT</div>'+
-          '<div style="font-size:12px;color:#555;margin-top:4px">Kelompok: '+kelNama+'</div>'+
-          '<div style="font-size:12px;color:#555">'+fd(CS.tanggal)+(CS.materi?' — '+CS.materi:'')+'</div>'+
+      '<div style="padding:36px 32px;font-family:Helvetica Neue,Arial,sans-serif;color:#000;background:#fff;min-width:400px;max-width:480px">'+
+        '<div style="text-align:center;margin-bottom:20px">'+
+          '<img src="persinas-asad-.png" style="width:72px;height:72px;object-fit:contain;margin-bottom:10px"><br>'+
+          '<div style="font-size:18px;font-weight:800;letter-spacing:1px">PERSINAS ASAD</div>'+
+          '<div style="font-size:12px;font-weight:700;color:#16a34a;letter-spacing:2px;margin-top:2px">BOYOLALI BARAT</div>'+
+          '<div style="margin-top:12px;padding:8px 16px;background:#f8f8f8;border-radius:8px;display:inline-block">'+
+            '<div style="font-size:13px;font-weight:700">REKAP ABSENSI LATIHAN</div>'+
+            '<div style="font-size:12px;color:#555;margin-top:2px">'+kelNama+'</div>'+
+            '<div style="font-size:11px;color:#777;margin-top:2px">'+fd(CS.tanggal)+(CS.materi?' &mdash; '+CS.materi:'')+'</div>'+
+          '</div>'+
         '</div>'+
-        '<div style="display:flex;justify-content:center;gap:24px;margin-bottom:16px;padding:10px;background:#f0fdf4;border-radius:8px;border:1px solid #bbf7d0">'+
-          '<div style="text-align:center"><div style="font-size:28px;font-weight:700;color:#16a34a">'+h+'</div><div style="font-size:11px;color:#555;font-weight:600">HADIR</div></div>'+
-          '<div style="text-align:center"><div style="font-size:28px;font-weight:700;color:#ca8a04">'+iz+'</div><div style="font-size:11px;color:#555;font-weight:600">IZIN</div></div>'+
-          '<div style="text-align:center"><div style="font-size:28px;font-weight:700;color:#dc2626">'+al+'</div><div style="font-size:11px;color:#555;font-weight:600">ALPHA</div></div>'+
-          '<div style="text-align:center"><div style="font-size:28px;font-weight:700;color:#333">'+pesData.length+'</div><div style="font-size:11px;color:#555;font-weight:600">TOTAL</div></div>'+
+        '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px">'+
+          '<div style="text-align:center;padding:16px 8px;background:#f0fdf4;border-radius:10px;border:2px solid #bbf7d0">'+
+            '<div style="font-size:36px;font-weight:800;color:#16a34a;line-height:1">'+h+'</div>'+
+            '<div style="font-size:11px;font-weight:700;color:#16a34a;margin-top:4px">HADIR</div>'+
+          '</div>'+
+          '<div style="text-align:center;padding:16px 8px;background:#fefce8;border-radius:10px;border:2px solid #fde68a">'+
+            '<div style="font-size:36px;font-weight:800;color:#ca8a04;line-height:1">'+iz+'</div>'+
+            '<div style="font-size:11px;font-weight:700;color:#ca8a04;margin-top:4px">IZIN</div>'+
+          '</div>'+
+          '<div style="text-align:center;padding:16px 8px;background:#fef2f2;border-radius:10px;border:2px solid #fecaca">'+
+            '<div style="font-size:36px;font-weight:800;color:#dc2626;line-height:1">'+al+'</div>'+
+            '<div style="font-size:11px;font-weight:700;color:#dc2626;margin-top:4px">ALPHA</div>'+
+          '</div>'+
+          '<div style="text-align:center;padding:16px 8px;background:#f1f5f9;border-radius:10px;border:2px solid #cbd5e1">'+
+            '<div style="font-size:36px;font-weight:800;color:#334155;line-height:1">'+tot+'</div>'+
+            '<div style="font-size:11px;font-weight:700;color:#334155;margin-top:4px">TOTAL</div>'+
+          '</div>'+
         '</div>'+
-        '<table style="width:100%;border-collapse:collapse;font-size:12px">'+
-          '<thead><tr style="background:#16a34a;color:#000"><th style="padding:8px 12px;border:1px solid #16a34a">No</th><th style="padding:8px 12px;border:1px solid #16a34a;text-align:left">Nama</th><th style="padding:8px 12px;border:1px solid #16a34a">JK</th><th style="padding:8px 12px;border:1px solid #16a34a">Status</th></tr></thead>'+
-          '<tbody>'+rows+'</tbody>'+
-        '</table>'+
+        '<div style="text-align:center;padding:14px;background:'+(pct>=80?'#f0fdf4':pct>=60?'#fefce8':'#fef2f2')+';border-radius:10px;border:2px solid '+(pct>=80?'#bbf7d0':pct>=60?'#fde68a':'#fecaca')+'">'+
+          '<div style="font-size:13px;font-weight:700;color:#555;margin-bottom:4px">TINGKAT KEHADIRAN</div>'+
+          '<div style="font-size:48px;font-weight:800;color:'+(pct>=80?'#16a34a':pct>=60?'#ca8a04':'#dc2626')+';line-height:1">'+pct+'%</div>'+
+        '</div>'+
+        '<div style="text-align:center;margin-top:16px;font-size:10px;color:#aaa">'+new Date().toLocaleString('id-ID')+'</div>'+
       '</div>';
     const canvas=await html2canvas(cv.firstElementChild,{scale:2,useCORS:true,backgroundColor:'#fff'});
     const link=document.createElement('a');
