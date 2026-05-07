@@ -14,6 +14,7 @@
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Teko:wght@400;500;600;700&family=Nunito:wght@400;500;600;700;800&display=swap');
   :root{--p:#c8102e;--pd:#960c22;--pl:#ff3352;--g:#d4a017;--gl:#f0c040;--d:#0d0d0d;--d2:#1a1a1a;--d3:#252525;--d4:#303030;--t:#f0f0f0;--td:#a0a0a0;--gr:#22c55e;--yl:#eab308;--rd:#ef4444;--bl:#3b82f6;--hj:#16a34a;--r:12px;--tb:64px}
+  html.light{--d:#f5f7f5;--d2:#ffffff;--d3:#f0f4f0;--d4:#d4e6d4;--t:#1a2e1a;--td:#5a7a5a;--hj:#16a34a;--p:#c8102e;--pd:#960c22;--pl:#e53e5e;--g:#b8860b;--gl:#d4a017;--gr:#16a34a;--yl:#ca8a04;--rd:#dc2626;--bl:#2563eb}
   *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
   body{font-family:'Nunito',sans-serif;background:var(--d);color:var(--t);min-height:100vh;overflow-x:hidden}
   #login-screen{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;background:var(--d);position:relative;overflow:hidden}
@@ -196,6 +197,26 @@
   .es .ei{font-size:40px;margin-bottom:10px}
   #rpt-cv{position:fixed;left:-9999px;top:0;width:800px;background:#fff;font-family:'Helvetica Neue',Arial,sans-serif;color:#000}
   @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+  /* Light theme overrides */
+  html.light body{background:var(--d)}
+  html.light .topbar{background:var(--d2);border-bottom:2px solid var(--hj);box-shadow:0 2px 8px rgba(0,0,0,.08)}
+  html.light .bottom-nav{background:var(--d2);border-top:1px solid var(--d4);box-shadow:0 -2px 8px rgba(0,0,0,.06)}
+  html.light .login-card{background:var(--d2);border-color:var(--hj)}
+  html.light .fg input,html.light .fg select,html.light .fg textarea{background:var(--d3);border-color:var(--d4);color:var(--t)}
+  html.light .dkc{background:var(--d2);border-color:var(--d4)}
+  html.light .dkc.aktif{background:linear-gradient(135deg,rgba(22,163,74,.08),transparent)}
+  html.light .pi{background:var(--d2)}
+  html.light .pmc,html.light .akc,html.light .kc{background:var(--d2);border-color:var(--d4)}
+  html.light .mdl{background:var(--d2)}
+  html.light .cfb{background:var(--d2)}
+  html.light .acch,html.light .accb{background:var(--d2);border-color:var(--d4)}
+  html.light .rekap-wrap{background:var(--d2);border-color:var(--d4)}
+  html.light .mc{background:var(--d3)}
+  html.light .ds{background:var(--d2);border-color:var(--d4)}
+  html.light .session-bar{background:linear-gradient(135deg,var(--pd),var(--p))}
+  html.light .slc{background:var(--d2);border-color:var(--d4)}
+  html.light .toast{background:var(--d2);border-color:var(--d4);color:var(--t)}
+  html.light #login-screen{background:var(--d)}
 </style>
 </head>
 <body>
@@ -215,7 +236,7 @@
 </div>
 
 <div id="app">
-  <div class="topbar"><div class="topbar-left"><img src="persinas-asad-.png" alt="" style="width:28px;height:28px;object-fit:contain;border-radius:6px;margin-right:4px"><div class="topbar-brand">PERSINAS <span>ASAD</span></div></div><div class="user-badge"><span class="user-name" id="disp-un"></span><span class="role-pill" id="disp-role"></span><button id="btn-install-top" onclick="showInstallBanner(true)" style="display:none;background:var(--hj);border:none;color:#fff;padding:5px 10px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;font-family:Nunito,sans-serif;margin-right:4px">&#11015; Install</button><button class="btn-logout" onclick="doLogout()">Keluar</button></div></div>
+  <div class="topbar"><div class="topbar-left"><img src="persinas-asad-.png" alt="" style="width:28px;height:28px;object-fit:contain;border-radius:6px;margin-right:4px"><div class="topbar-brand">PERSINAS <span>ASAD</span></div></div><div class="user-badge"><span class="user-name" id="disp-un"></span><span class="role-pill" id="disp-role"></span><button id="btn-install-top" onclick="showInstallBanner(true)" style="display:none;background:var(--hj);border:none;color:#fff;padding:5px 10px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;font-family:Nunito,sans-serif;margin-right:4px">&#11015; Install</button><button id="btn-theme" onclick="toggleTheme()" title="Ganti Tema" style="background:none;border:1px solid var(--d4);color:var(--td);width:32px;height:32px;border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center;margin-right:6px;font-size:16px;flex-shrink:0">🌙</button><button class="btn-logout" onclick="doLogout()">Keluar</button></div></div>
   <div class="content">
     <div class="tab-panel" id="tab-dashboard"><div class="sec-title">DASHBOARD</div><div class="sec-sub">Rekap kehadiran semua kelompok</div><div id="dash-ov" class="dash-ov"></div><div id="dash-list"></div><button class="btn-ddl" onclick="unduhSemuaPDF()">UNDUH REKAP SEMUA KELOMPOK (PDF)</button></div>
     <div class="tab-panel" id="tab-absensi">
@@ -409,10 +430,28 @@ async function doAfterLogin(){
   if(isA){sh('nav-dashboard');sh('nav-kelompok');sh('nav-akun');hi('tab-absensi');hi('tab-peserta');AT='dashboard';}
   else{sh('nav-absensi');sh('nav-peserta');sh('pes-pel');hi('tab-dashboard');AT='absensi';}
   await loadKL();await loadDL();
+  // Tandai cache agar setupNav/go tidak trigger load duplikat
+  if(isA){_cD=true;}else{_cP=true;}
   setupNav();
-  if(isA){await loadDash();}else{await initAbs();await loadPesertaPelatih();}
+  // Load data utama sekali saja
+  if(isA){_cD=false;await loadDash();}else{_cP=false;await initAbs();await loadPesertaPelatih();}
 }
 function doLogout(){CU=null;KL=[];DL=[];PA=[];CS=null;AD={};dashRows=null;expDesa.clear();expKel.clear();_cP=_cD=_cK=_cA=_cR=false;localStorage.removeItem('persinas_s');showLogin();document.getElementById('inp-password').value='';}
+function toggleTheme(){
+  const isLight=document.documentElement.classList.toggle('light');
+  localStorage.setItem('persinas_theme', isLight?'light':'dark');
+  document.getElementById('btn-theme').textContent=isLight?'☀️':'🌙';
+  document.querySelector('meta[name="theme-color"]').content=isLight?'#f5f7f5':'#0d0d0d';
+}
+function applyTheme(){
+  const t=localStorage.getItem('persinas_theme');
+  if(t==='light'){
+    document.documentElement.classList.add('light');
+    const btn=document.getElementById('btn-theme');
+    if(btn)btn.textContent='☀️';
+    document.querySelector('meta[name="theme-color"]').content='#f5f7f5';
+  }
+}
 function gTabs(){return CU&&CU.role==='admin'?['dashboard','kelompok','akun']:['absensi','peserta']}
 function setupNav(){const t=gTabs(),i=document.getElementById('nav-ind');i.style.width=(100/t.length)+'%';i.style.left='0%';if(!t.includes(AT))AT=t[0];go(AT);}
 function go(t){AT=t;const tabs=gTabs(),idx=tabs.indexOf(t);tabs.forEach(x=>{document.getElementById('tab-'+x).classList.toggle('active',x===t);document.getElementById('nav-'+x).classList.toggle('active',x===t)});document.getElementById('nav-ind').style.left=((idx/tabs.length)*100)+'%';if(t==='dashboard'&&!_cD)loadDash();if(t==='kelompok'){renderDesaList();if(!_cK)loadKD();}if(t==='akun'&&!_cA)loadAK();if(t==='peserta'&&!_cP)loadPesertaPelatih();}
@@ -433,8 +472,28 @@ async function loadDash(){
     kelD.forEach(k=>{stats[k.id]={nama:k.nama,np:(k.peserta||[]).length,ns:0,h:0,i:0,a:0,t:0};totP+=stats[k.id].np;});
     sesD.forEach(s=>{const ks=stats[s.kelompok_id];if(!ks)return;ks.ns++;totS++;(s.absensi||[]).forEach(a=>{ks.t++;totAll++;if(a.status==='hadir'){ks.h++;totH++;}if(a.status==='izin')ks.i++;if(a.status==='alpha')ks.a++;});});
     const avgP=totAll?Math.round(totH/totAll*100):0;
-    document.getElementById('dash-ov').innerHTML='<div class="ds c1"><div class="dn">'+kelD.length+'</div><div class="dl">Kelompok</div></div><div class="ds c2"><div class="dn">'+totP+'</div><div class="dl">Peserta</div></div><div class="ds c3"><div class="dn">'+totS+'</div><div class="dl">Sesi</div></div><div class="ds c4"><div class="dn">'+avgP+'%</div><div class="dl">Kehadiran</div></div>';
+    const totBelum=kelD.length-activeIds.size;
+    document.getElementById('dash-ov').innerHTML=
+      '<div class="ds c1"><div class="dn">'+kelD.length+'</div><div class="dl">Kelompok</div></div>'+
+      '<div class="ds c2"><div class="dn">'+totP+'</div><div class="dl">Peserta</div></div>'+
+      '<div class="ds c3"><div class="dn">'+totS+'</div><div class="dl">Sesi</div></div>'+
+      '<div class="ds c4"><div class="dn">'+avgP+'%</div><div class="dl">Kehadiran</div></div>';
+    // Banner kelompok belum latihan bulan ini
+    const namaBulanIni=new Date().toLocaleDateString('id-ID',{month:'long',year:'numeric'});
+    const bannerEl=document.createElement('div');
+    bannerEl.style.cssText='display:flex;align-items:center;gap:10px;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.25);border-radius:10px;padding:10px 14px;margin-bottom:12px';
+    bannerEl.innerHTML=
+      '<div style="font-size:22px;flex-shrink:0">⚠️</div>'+
+      '<div style="flex:1">'+
+        '<div style="font-size:12px;font-weight:800;color:var(--rd)">BELUM LATIHAN BULAN '+namaBulanIni.toUpperCase()+'</div>'+
+        '<div style="font-size:13px;font-weight:700;color:var(--t);margin-top:1px">'+
+          (totBelum===0
+            ? '<span style="color:var(--gr)">✓ Semua kelompok sudah latihan!</span>'
+            : '<span style="color:var(--rd)">'+totBelum+'</span> dari '+kelD.length+' kelompok belum latihan')+
+        '</div>'+
+      '</div>';
     dashRows=[];const list=document.getElementById('dash-list');list.innerHTML='';
+    list.appendChild(bannerEl);
     // Kelompokkan per desa
     const desaMap={};
     kelD.forEach(k=>{
@@ -445,11 +504,23 @@ async function loadDash(){
       desaMap[desaNm].push({k,s,pct,aktif});
     });
     Object.entries(desaMap).forEach(([desaNm,items],di)=>{
+      const belumDesa=items.filter(x=>!x.aktif).length;
       // Header desa (collapsible)
       const hdr=document.createElement('div');
       const isOpen=expDesa.has(desaNm);
       hdr.className='acch'+(isOpen?' open':'');
-      hdr.innerHTML='<div class="acci" style="font-size:20px">&#127968;</div><div class="accf"><div class="accfn">'+desaNm+'</div><div class="accm">'+items.length+' kelompok</div></div><div class="accw">&#9660;</div>';
+      hdr.innerHTML=
+        '<div class="acci" style="font-size:20px">&#127968;</div>'+
+        '<div class="accf">'+
+          '<div class="accfn">'+desaNm+'</div>'+
+          '<div class="accm" style="display:flex;gap:8px;align-items:center">'+
+            '<span>'+items.length+' kelompok</span>'+
+            (belumDesa>0
+              ? '<span style="background:rgba(239,68,68,.15);color:var(--rd);font-size:10px;font-weight:700;padding:1px 7px;border-radius:20px;border:1px solid rgba(239,68,68,.25)">'+belumDesa+' belum latihan</span>'
+              : '<span style="background:rgba(34,197,94,.12);color:var(--gr);font-size:10px;font-weight:700;padding:1px 7px;border-radius:20px;border:1px solid rgba(34,197,94,.2)">✓ semua aktif</span>')+
+          '</div>'+
+        '</div>'+
+        '<div class="accw">&#9660;</div>';
       const bodyId='dash-desa-'+di;
       hdr.onclick=()=>{
         if(expDesa.has(desaNm))expDesa.delete(desaNm);else expDesa.add(desaNm);
@@ -1080,7 +1151,7 @@ async function unduhSemuaPDF(){
     doc.autoTable({startY:y,margin:{left:14,right:14},theme:'grid',headStyles:{fillColor:[34,197,94],fontSize:10,textColor:[0,0,0],halign:'center'},bodyStyles:{fontSize:10},head:[['Desa','Kelompok','Peserta','Hadir','Izin','Alpha','%']],body:rows,columnStyles:{0:{fontStyle:'bold'},1:{fontStyle:'bold'},2:{halign:'center'},3:{halign:'center',textColor:[22,163,74]},4:{halign:'center',textColor:[202,138,4]},5:{halign:'center',textColor:[220,38,38]},6:{halign:'center',fontStyle:'bold'}}});
     y=doc.lastAutoTable.finalY+10;if(y>270){doc.addPage();y=20;}
     doc.setFontSize(11);doc.setFont('helvetica','bold');doc.text('Kehadiran Rata-rata: '+gPct+'%',14,y);
-    doc.save('Rekap_'+namaBulan.replace(/\s+/g,'_')+'.pdf');toast('PDF berhasil diunduh!','success');
+    doc.save('Rekap Latihan PERSINAS bulan_'+namaBulan.replace(/\s+/g,'_')+'.pdf');toast('PDF berhasil diunduh!','success');
   }catch(e){toast('Gagal: '+e.message,'error');}
 }
 async function unduhPNG(kid,kn){
@@ -1186,6 +1257,8 @@ if(isPWA()){
 }
 document.addEventListener('keydown',e=>{if(e.key==='Enter'&&document.getElementById('login-screen').style.display!=='none')doLogin();});
 document.addEventListener('DOMContentLoaded',()=>{
+  // Terapkan tema tersimpan sebelum render apapun
+  applyTheme();
   // Sembunyikan login screen dulu kalau ada sesi tersimpan
   const _s=localStorage.getItem('persinas_s');
   if(_s){
