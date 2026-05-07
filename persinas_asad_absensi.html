@@ -14,7 +14,7 @@
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Teko:wght@400;500;600;700&family=Nunito:wght@400;500;600;700;800&display=swap');
   :root{--p:#c8102e;--pd:#960c22;--pl:#ff3352;--g:#d4a017;--gl:#f0c040;--d:#0d0d0d;--d2:#1a1a1a;--d3:#252525;--d4:#303030;--t:#f0f0f0;--td:#a0a0a0;--gr:#22c55e;--yl:#eab308;--rd:#ef4444;--bl:#3b82f6;--hj:#16a34a;--r:12px;--tb:64px}
-  html.light{--d:#f5f7f5;--d2:#ffffff;--d3:#f0f4f0;--d4:#d4e6d4;--t:#1a2e1a;--td:#5a7a5a;--hj:#16a34a;--p:#c8102e;--pd:#960c22;--pl:#e53e5e;--g:#b8860b;--gl:#d4a017;--gr:#16a34a;--yl:#ca8a04;--rd:#dc2626;--bl:#2563eb}
+  html.light{--d:#f5f7f5;--d2:#ffffff;--d3:#f0f4f0;--d4:#d4e6d4;--t:#1a2e1a;--td:#5a7a5a;--hj:#16a34a;--p:#16a34a;--pd:#15803d;--pl:#22c55e;--g:#b8860b;--gl:#d4a017;--gr:#16a34a;--yl:#ca8a04;--rd:#dc2626;--bl:#2563eb}
   *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
   body{font-family:'Nunito',sans-serif;background:var(--d);color:var(--t);min-height:100vh;overflow-x:hidden}
   #login-screen{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;background:var(--d);position:relative;overflow:hidden}
@@ -37,23 +37,30 @@
   .err-msg strong{display:block;margin-bottom:4px;font-size:14px;color:#fca5a5}
   .err-msg small{font-size:11px;color:#e8a0a0;word-break:break-all}
   #app{display:none;flex-direction:column;min-height:100vh}
-  .topbar{background:var(--d2);border-bottom:2px solid var(--hj);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+  .topbar{background:rgba(26,26,26,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid rgba(22,163,74,.3);padding:10px 16px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+  html.light .topbar{background:rgba(255,255,255,.92);border-bottom:1px solid rgba(22,163,74,.3);box-shadow:0 1px 12px rgba(0,0,0,.08)}
   .topbar-left{display:flex;align-items:center;gap:10px}
   .topbar-brand{font-family:'Teko',sans-serif;font-size:22px;color:var(--p);letter-spacing:1px;line-height:1}
   .topbar-brand span{color:var(--g)}
-  .user-badge{display:flex;align-items:center;gap:8px}
+  .user-badge{display:flex;align-items:center;gap:6px}
   .role-pill{background:var(--p);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;text-transform:uppercase;letter-spacing:.5px}
-  .role-pill.pelatih{background:var(--g);color:var(--d)}
-  .user-name{font-size:13px;font-weight:600;color:var(--td)}
-  .btn-logout{background:none;border:1px solid var(--d4);color:var(--td);padding:6px 12px;border-radius:6px;font-size:12px;cursor:pointer;font-family:'Nunito',sans-serif}
+  .role-pill.pelatih{background:var(--hj);color:#fff}
+  .user-name{font-size:12px;font-weight:600;color:var(--td)}
+  .btn-logout{background:none;border:1px solid var(--d4);color:var(--td);padding:5px 10px;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .2s}
+  .btn-logout:hover{border-color:var(--rd);color:var(--rd)}
   .content{flex:1;overflow-y:auto;padding:16px;padding-bottom:calc(var(--tb)+16px)}
   .tab-panel{display:none}.tab-panel.active{display:block}
-  .bottom-nav{position:fixed;bottom:0;left:0;right:0;height:var(--tb);background:var(--d2);border-top:1px solid var(--d4);display:flex;z-index:100}
-  .nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;border:none;background:none;color:var(--td);cursor:pointer;padding:8px}
+  .bottom-nav{position:fixed;bottom:0;left:0;right:0;height:var(--tb);background:rgba(26,26,26,.95);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-top:1px solid rgba(255,255,255,.06);display:flex;z-index:100;padding:0 4px}
+  html.light .bottom-nav{background:rgba(255,255,255,.95);border-top:1px solid rgba(0,0,0,.08);box-shadow:0 -4px 20px rgba(0,0,0,.06)}
+  .nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:none;background:none;color:var(--td);cursor:pointer;padding:8px 4px;position:relative;transition:color .2s}
   .nav-btn.active{color:var(--hj)}
-  .nav-btn svg{width:22px;height:22px}
-  .nav-btn span{font-size:11px;font-weight:700;letter-spacing:.3px}
-  .nav-ind{position:absolute;top:0;height:2px;background:var(--hj);transition:left .3s cubic-bezier(.4,0,.2,1),width .3s cubic-bezier(.4,0,.2,1)}
+  .nav-btn .nav-icon{width:44px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:16px;transition:background .2s,transform .15s}
+  .nav-btn.active .nav-icon{background:rgba(22,163,74,.15)}
+  .nav-btn:active .nav-icon{transform:scale(.88)}
+  .nav-btn svg{width:20px;height:20px;transition:stroke-width .2s}
+  .nav-btn.active svg{stroke-width:2.5}
+  .nav-btn span{font-size:10px;font-weight:700;letter-spacing:.2px;transition:opacity .2s}
+  .nav-ind{display:none}
   .sec-title{font-family:'Teko',sans-serif;font-size:28px;letter-spacing:1px;color:var(--t);margin-bottom:4px}
   .sec-sub{font-size:13px;color:var(--td);margin-bottom:16px}
   .p-banner{background:linear-gradient(135deg,rgba(212,160,23,.15),rgba(212,160,23,.05));border:1px solid rgba(212,160,23,.25);border-radius:var(--r);padding:14px 16px;margin-bottom:16px;display:flex;align-items:center;gap:12px}
@@ -236,7 +243,7 @@
 </div>
 
 <div id="app">
-  <div class="topbar"><div class="topbar-left"><img src="persinas-asad-.png" alt="" style="width:28px;height:28px;object-fit:contain;border-radius:6px;margin-right:4px"><div class="topbar-brand">PERSINAS <span>ASAD</span></div></div><div class="user-badge"><span class="user-name" id="disp-un"></span><span class="role-pill" id="disp-role"></span><button id="btn-install-top" onclick="showInstallBanner(true)" style="display:none;background:var(--hj);border:none;color:#fff;padding:5px 10px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;font-family:Nunito,sans-serif;margin-right:4px">&#11015; Install</button><button id="btn-theme" onclick="toggleTheme()" title="Ganti Tema" style="background:none;border:1px solid var(--d4);color:var(--td);width:32px;height:32px;border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center;margin-right:6px;font-size:16px;flex-shrink:0">🌙</button><button class="btn-logout" onclick="doLogout()">Keluar</button></div></div>
+  <div class="topbar"><div class="topbar-left"><img src="persinas-asad-.png" alt="" style="width:30px;height:30px;object-fit:contain;border-radius:8px;margin-right:6px"><div><div class="topbar-brand">PERSINAS <span>ASAD</span></div><div style="font-size:9px;color:var(--hj);letter-spacing:1.5px;font-weight:700;margin-top:-2px">BOYOLALI BARAT</div></div></div><div class="user-badge"><span class="role-pill" id="disp-role"></span><button id="btn-install-top" onclick="showInstallBanner(true)" style="display:none;background:var(--hj);border:none;color:#fff;padding:5px 10px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;font-family:Nunito,sans-serif">&#11015;</button><button id="btn-theme" onclick="toggleTheme()" title="Ganti Tema" style="background:none;border:1px solid var(--d4);color:var(--td);width:30px;height:30px;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0">🌙</button><button class="btn-logout" onclick="doLogout()">Keluar</button></div></div>
   <div class="content">
     <div class="tab-panel" id="tab-dashboard"><div class="sec-title">DASHBOARD</div><div class="sec-sub">Rekap kehadiran semua kelompok</div><div id="dash-ov" class="dash-ov"></div><div id="dash-list"></div><button class="btn-ddl" onclick="unduhSemuaPDF()">UNDUH REKAP SEMUA KELOMPOK (PDF)</button></div>
     <div class="tab-panel" id="tab-absensi">
@@ -250,10 +257,12 @@
       <div id="abs-no" style="display:none"></div>
       <div id="abs-bar" style="display:none"></div>
       <div id="abs-slc" style="display:none"></div>
-      <div id="abs-rekap" class="rekap-wrap" style="display:none"></div>
-      <div id="abs-toolbar" class="abs-toolbar" style="display:none">
-        <button class="btn-min" onclick="toggleMin()">&#9660; Minimize</button>
-        <button class="btn-min" onclick="simpanAbs()" style="background:var(--gr);color:#fff;border-color:var(--gr)">&#10003; Tutup Sesi</button>
+      <div id="abs-rekap-row" style="display:none;align-items:center;gap:8px;margin-bottom:14px">
+        <div id="abs-rekap" class="rekap-wrap" style="flex:1;margin-bottom:0"></div>
+        <div id="abs-toolbar" style="display:flex;flex-direction:column;gap:6px;flex-shrink:0">
+          <button class="btn-min" onclick="simpanAbs()" style="background:var(--gr);color:#fff;border-color:var(--gr);white-space:nowrap">&#10003; Tutup Sesi</button>
+          <button class="btn-min" onclick="toggleMin()" style="white-space:nowrap">&#9660; Minimize</button>
+        </div>
       </div>
       <div id="abs-list"></div>
       <div id="abs-mini" style="display:none"></div>
@@ -290,11 +299,26 @@
     <div class="tab-panel" id="tab-akun"><div class="sec-title">KELOLA AKUN</div><div class="sec-sub">Manajemen akun login pelatih</div><div class="sbar"><input type="text" id="s-akun" placeholder="Cari nama / username..." oninput="filterAF()"><button class="badd" onclick="openAddA()">+</button></div><div id="ak-ldg" class="ldg" style="display:none"><div class="spn"></div></div><div id="ak-list"></div></div>
   </div>
   <nav class="bottom-nav" id="bnav"><div class="nav-ind" id="nav-ind"></div>
-    <button class="nav-btn" id="nav-dashboard" onclick="go('dashboard')" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span>Dashboard</span></button>
-    <button class="nav-btn" id="nav-absensi" onclick="go('absensi')" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg><span>Absensi</span></button>
-    <button class="nav-btn" id="nav-peserta" onclick="go('peserta')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg><span>Jama'ah</span></button>
-    <button class="nav-btn" id="nav-kelompok" onclick="go('kelompok')" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg><span>Kelompok</span></button>
-    <button class="nav-btn" id="nav-akun" onclick="go('akun')" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 8"/></svg><span>Akun</span></button>
+    <button class="nav-btn" id="nav-dashboard" onclick="go('dashboard')" style="display:none">
+      <div class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="3" width="8" height="8" rx="2"/><rect x="3" y="13" width="8" height="8" rx="2"/><rect x="13" y="13" width="8" height="8" rx="2"/></svg></div>
+      <span>Dashboard</span>
+    </button>
+    <button class="nav-btn" id="nav-absensi" onclick="go('absensi')" style="display:none">
+      <div class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><rect x="3" y="4" width="14" height="16" rx="2"/></svg></div>
+      <span>Absensi</span>
+    </button>
+    <button class="nav-btn" id="nav-peserta" onclick="go('peserta')">
+      <div class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="7" r="4"/><path d="M3 21v-2a4 4 0 014-4h4a4 4 0 014 4v2"/><path d="M16 3.13a4 4 0 010 7.75"/><path d="M21 21v-2a4 4 0 00-3-3.87"/></svg></div>
+      <span>Jama'ah</span>
+    </button>
+    <button class="nav-btn" id="nav-kelompok" onclick="go('kelompok')" style="display:none">
+      <div class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+      <span>Kelompok</span>
+    </button>
+    <button class="nav-btn" id="nav-akun" onclick="go('akun')" style="display:none">
+      <div class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></div>
+      <span>Akun</span>
+    </button>
 <div class="mo" id="mo-sesi"><div class="mdl"><div class="mh"></div><div class="mt">Buat Sesi Latihan</div><div class="fg"><label>Tanggal</label><input type="date" id="s-tgl"></div><div class="fg"><label>Materi</label><textarea id="s-mat" style="resize:none;height:70px"></textarea></div><div class="macts"><button class="mcan" onclick="cm('mo-sesi')">Batal</button><button class="msav" onclick="buatSesi()">Buat</button></div></div></div>
 <div class="mo" id="mo-pes"><div class="mdl"><div class="mh"></div><div class="mt" id="mp-tt">Tambah Jama'ah</div><input type="hidden" id="mp-id"><div class="fg"><label>Nama Lengkap</label><input type="text" id="mp-nm"></div><div class="fg"><label>Jenis Kelamin</label><select id="mp-jk"><option value="Laki-laki">Laki-laki</option><option value="Perempuan">Perempuan</option></select></div><div class="fg"><label>Tanggal Lahir</label><input type="date" id="mp-tl"></div><div class="fg" id="mp-kw"><label>Kelompok</label><select id="mp-kl"><option value="">-- Pilih --</option></select></div><div class="macts"><button class="mcan" onclick="cm('mo-pes')">Batal</button><button class="msav" onclick="simpanP()">Simpan</button></div></div></div><div class="mo" id="mo-akun"><div class="mdl"><div class="mh"></div><div class="mt" id="ma-tt">Tambah Akun</div><input type="hidden" id="ma-id"><div class="fg"><label>Nama</label><input type="text" id="ma-nm"></div><div class="fg"><label>Username</label><input type="text" id="ma-un" autocapitalize="none" autocomplete="off"></div><div class="fg"><label>Password</label><input type="text" id="ma-pw"></div><div class="fg"><label>Kelompok</label><select id="ma-kl"><option value="">-- Pilih --</option></select></div><div class="macts"><button class="mcan" onclick="cm('mo-akun')">Batal</button><button class="msav" onclick="simpanA()">Simpan</button></div></div></div><div class="mo" id="mo-kel"><div class="mdl"><div class="mh"></div><div class="mt" id="mk-tt">Tambah Kelompok</div><input type="hidden" id="mk-id"><div class="fg"><label>Nama Kelompok</label><input type="text" id="mk-nm"></div><div class="fg"><label>Desa</label><select id="mk-desa"><option value="">-- Pilih Desa --</option></select></div><div class="macts"><button class="mcan" onclick="cm('mo-kel')">Batal</button><button class="msav" onclick="simpanK()">Simpan</button></div></div></div>
 <div class="mo" id="mo-detail"><div class="mdl"><div class="mh"></div><div class="mt" id="md-kel-tt">Detail Kelompok</div><div id="md-kel-body"><div class="ldg"><div class="spn"></div></div></div><div class="macts"><button class="mcan" onclick="cm('mo-detail')">Tutup</button></div></div></div>
@@ -430,11 +454,8 @@ async function doAfterLogin(){
   if(isA){sh('nav-dashboard');sh('nav-kelompok');sh('nav-akun');hi('tab-absensi');hi('tab-peserta');AT='dashboard';}
   else{sh('nav-absensi');sh('nav-peserta');sh('pes-pel');hi('tab-dashboard');AT='absensi';}
   await loadKL();await loadDL();
-  // Tandai cache agar setupNav/go tidak trigger load duplikat
-  if(isA){_cD=true;}else{_cP=true;}
   setupNav();
-  // Load data utama sekali saja
-  if(isA){_cD=false;await loadDash();}else{_cP=false;await initAbs();await loadPesertaPelatih();}
+  if(isA){await loadDash();}else{await initAbs();await loadPesertaPelatih();}
 }
 function doLogout(){CU=null;KL=[];DL=[];PA=[];CS=null;AD={};dashRows=null;expDesa.clear();expKel.clear();_cP=_cD=_cK=_cA=_cR=false;localStorage.removeItem('persinas_s');showLogin();document.getElementById('inp-password').value='';}
 function toggleTheme(){
@@ -454,7 +475,7 @@ function applyTheme(){
 }
 function gTabs(){return CU&&CU.role==='admin'?['dashboard','kelompok','akun']:['absensi','peserta']}
 function setupNav(){const t=gTabs(),i=document.getElementById('nav-ind');i.style.width=(100/t.length)+'%';i.style.left='0%';if(!t.includes(AT))AT=t[0];go(AT);}
-function go(t){AT=t;const tabs=gTabs(),idx=tabs.indexOf(t);tabs.forEach(x=>{document.getElementById('tab-'+x).classList.toggle('active',x===t);document.getElementById('nav-'+x).classList.toggle('active',x===t)});document.getElementById('nav-ind').style.left=((idx/tabs.length)*100)+'%';if(t==='dashboard'&&!_cD)loadDash();if(t==='kelompok'){renderDesaList();if(!_cK)loadKD();}if(t==='akun'&&!_cA)loadAK();if(t==='peserta'&&!_cP)loadPesertaPelatih();}
+function go(t){AT=t;const tabs=gTabs(),idx=tabs.indexOf(t);tabs.forEach(x=>{document.getElementById('tab-'+x).classList.toggle('active',x===t);document.getElementById('nav-'+x).classList.toggle('active',x===t)});document.getElementById('nav-ind').style.left=((idx/tabs.length)*100)+'%';if(t==='dashboard'&&!_cD){_cD=true;loadDash();}if(t==='kelompok'){renderDesaList();if(!_cK)loadKD();}if(t==='akun'&&!_cA)loadAK();if(t==='peserta'&&!_cP)loadPesertaPelatih();}
 async function loadDL(){try{DL=await sf('desa?select=*&order=nama.asc');fillDS();}catch(e){toast('Gagal muat desa','error');}}
 async function loadKL(){try{KL=await sf('kelompok?select=*,desa(nama)&order=nama.asc');fillKS();}catch(e){toast('Gagal muat kelompok','error');throw e;}}
 function fillKS(){['mp-kl','ma-kl'].forEach(id=>{const el=document.getElementById(id);if(!el)return;const f=el.options[0];el.innerHTML='';if(f)el.appendChild(f);KL.forEach(k=>{const o=document.createElement('option');o.value=k.id;o.textContent=k.nama+(k.desa?' ('+k.desa.nama+')':'');el.appendChild(o);});});}
@@ -655,16 +676,59 @@ async function renderRekap_Peserta(kelId,kelNama,desaNama){
   }catch(e){el.innerHTML='<div class="es">Gagal muat.</div>';}
 }
 async function initAbs(){
-  hi('abs-bar');hi('abs-no');hi('abs-slc');hi('abs-rekap');hi('abs-toolbar');hi('abs-mini');
+  hi('abs-bar');hi('abs-no');hi('abs-slc');hi('abs-rekap-row');hi('abs-mini');
   document.getElementById('abs-list').innerHTML='';absMin=false;
   if(!CU.kelompok_id){sh('abs-no');document.getElementById('abs-no').innerHTML='<div class="es"><div class="ei">!</div>Kelompok belum terdaftar.</div>';return;}
   sh('abs-ldg');
   try{
-    const r=await sf('sesi?kelompok_id=eq.'+CU.kelompok_id+'&order=tanggal.desc,created_at.desc&limit=1');
+    // Ambil semua sesi, bukan hanya 1
+    const r=await sf('sesi?kelompok_id=eq.'+CU.kelompok_id+'&order=tanggal.desc,created_at.desc');
     hi('abs-ldg');
-    if(!r.length){sh('abs-no');document.getElementById('abs-no').innerHTML='<div class="es"><div class="ei">!</div>Belum ada sesi.<br><br><button class="btn-p" style="width:auto;padding:10px 24px" onclick="openSM()">Buat Sesi</button></div>';return;}
-    CS=r[0];if(CS.selesai){renderSLC();return;}renderSBar();
+    if(!r.length){
+      sh('abs-no');
+      document.getElementById('abs-no').innerHTML='<div class="es"><div class="ei">!</div>Belum ada sesi.<br><br><button class="btn-p" style="width:auto;padding:10px 24px" onclick="openSM()">Buat Sesi</button></div>';
+      return;
+    }
+    // Cari sesi aktif (belum selesai) — prioritas utama
+    const sesiAktif=r.find(s=>!s.selesai);
+    if(sesiAktif){
+      CS=sesiAktif;
+      renderSBar();
+    } else {
+      // Semua selesai — tampilkan sesi terakhir
+      CS=r[0];
+      renderSLC();
+    }
+    // Tampilkan riwayat sesi lainnya di bawah
+    renderRiwayatSesi(r);
   }catch(e){hi('abs-ldg');toast('Gagal: '+e.message,'error');}
+}
+function renderRiwayatSesi(sesiList){
+  const container=document.getElementById('abs-list');
+  // Hapus riwayat lama kalau ada
+  const old=document.getElementById('riwayat-sesi');if(old)old.remove();
+  if(sesiList.length<=1)return;
+  const wrap=document.createElement('div');wrap.id='riwayat-sesi';
+  wrap.style.cssText='margin-top:14px';
+  const selesaiList=sesiList.filter(s=>s.selesai);
+  if(!selesaiList.length)return;
+  wrap.innerHTML='<div style="font-size:11px;font-weight:700;color:var(--td);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Riwayat Sesi ('+selesaiList.length+')</div>';
+  selesaiList.forEach(s=>{
+    const item=document.createElement('div');
+    item.style.cssText='background:var(--d2);border:1px solid var(--d4);border-radius:10px;padding:10px 14px;margin-bottom:6px;display:flex;align-items:center;justify-content:space-between;cursor:pointer';
+    item.innerHTML=
+      '<div>'+
+        '<div style="font-size:13px;font-weight:700">'+fd(s.tanggal)+'</div>'+
+        (s.materi?'<div style="font-size:11px;color:var(--td);margin-top:1px">'+s.materi+'</div>':'')+
+      '</div>'+
+      '<div style="display:flex;align-items:center;gap:8px">'+
+        '<span style="font-size:10px;font-weight:700;background:rgba(34,197,94,.12);color:var(--gr);padding:2px 8px;border-radius:20px;border:1px solid rgba(34,197,94,.2)">SELESAI</span>'+
+        '<span style="color:var(--td);font-size:16px">›</span>'+
+      '</div>';
+    item.onclick=()=>{CS=s;renderSLC();wrap.remove();renderRiwayatSesi(sesiList);};
+    wrap.appendChild(item);
+  });
+  container.appendChild(wrap);
 }
 function renderSBar(){
   hi('abs-no');hi('abs-slc');
@@ -674,7 +738,7 @@ function renderSBar(){
   loadAbsenPeserta(CU.kelompok_id);
 }
 function renderSLC(){
-  hi('abs-bar');hi('abs-no');hi('abs-rekap');hi('abs-toolbar');hi('abs-mini');
+  hi('abs-bar');hi('abs-no');hi('abs-rekap-row');hi('abs-mini');
   const list=document.getElementById('abs-list');list.innerHTML='';list.style.display='none';
   sh('abs-ldg');
   sf('absensi?sesi_id=eq.'+CS.id+'&select=status').then(r=>{
@@ -871,7 +935,7 @@ function hapusSesi(){
 }
 async function editSL(){try{await sf('sesi?id=eq.'+CS.id,{method:'PATCH',body:JSON.stringify({selesai:false}),prefer:'return=minimal'});CS.selesai=false;hi('abs-slc');absMin=false;renderSBar();}catch(e){toast('Gagal: '+e.message,'error');}}
 async function loadAbsenPeserta(kid){
-  sh('abs-ldg');hi('abs-rekap');hi('abs-toolbar');hi('abs-mini');
+  sh('abs-ldg');hi('abs-rekap-row');hi('abs-mini');
   document.getElementById('abs-list').innerHTML='';absMin=false;
   try{
     const pes=await sf('peserta?kelompok_id=eq.'+kid+'&order=nama.asc');hi('abs-ldg');
@@ -879,7 +943,9 @@ async function loadAbsenPeserta(kid){
     const ex=await sf('absensi?sesi_id=eq.'+CS.id+'&select=peserta_id,status');
     AD={};ex.forEach(a=>{AD[a.peserta_id]=a.status;});
     absPes=pes;absJK='all';
-    renderRekap(pes);renderAbsenList(pes);sh('abs-rekap');sh('abs-toolbar');updSt();
+    renderRekap(pes);renderAbsenList(pes);
+    document.getElementById('abs-rekap-row').style.display='flex';
+    updSt();
   }catch(e){hi('abs-ldg');toast('Gagal: '+e.message,'error');}
 }
 function renderRekap(pes){
@@ -909,8 +975,14 @@ function renderAbsenList(pes){
 }
 function toggleMin(){
   absMin=!absMin;
-  if(absMin){hi('abs-list');hi('abs-toolbar');sh('abs-mini');document.getElementById('abs-mini').innerHTML='<div class="mini-acts"><button class="btn-expand" onclick="toggleMin()">&#9650; Buka Lagi</button><button class="btn-finish" onclick="simpanAbs()">Selesai &amp; Tutup Sesi</button></div>';}
-  else{sh('abs-list');sh('abs-toolbar');hi('abs-mini');}
+  if(absMin){
+    hi('abs-list');hi('abs-rekap-row');sh('abs-mini');
+    document.getElementById('abs-mini').innerHTML='<div class="mini-acts"><button class="btn-expand" onclick="toggleMin()">&#9650; Buka Lagi</button><button class="btn-finish" onclick="simpanAbs()">Selesai &amp; Tutup Sesi</button></div>';
+  } else {
+    sh('abs-list');
+    document.getElementById('abs-rekap-row').style.display='flex';
+    hi('abs-mini');
+  }
 }
 function filterJK(jk){
   absJK=jk;
@@ -973,7 +1045,14 @@ async function buatSesi(){
   try{
     const r=await sf('sesi',{method:'POST',body:JSON.stringify({tanggal:tgl,materi:mat,kelompok_id:kid})});
     if(!r||!r.length){toast('Gagal membuat sesi.','error');return;}
-    CS=r[0];cm('mo-sesi');absMin=false;renderSBar();toast('Sesi dibuat!','success');
+    CS=r[0];cm('mo-sesi');absMin=false;
+    // Reset tombol modal kembali ke Buat
+    document.querySelector('#mo-sesi .msav').textContent='Buat';
+    document.querySelector('#mo-sesi .msav').onclick=buatSesi;
+    renderSBar();toast('Sesi dibuat!','success');
+    // Refresh riwayat
+    const semua=await sf('sesi?kelompok_id=eq.'+kid+'&order=tanggal.desc,created_at.desc');
+    renderRiwayatSesi(semua);
   }catch(e){toast('Gagal: '+e.message,'error');}
 }
 async function loadPesertaPelatih(){
