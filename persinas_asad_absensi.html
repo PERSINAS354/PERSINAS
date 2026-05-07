@@ -215,7 +215,7 @@
 </div>
 
 <div id="app">
-  <div class="topbar"><div class="topbar-left"><img src="persinas-asad-.png" alt="" style="width:28px;height:28px;object-fit:contain;border-radius:6px;margin-right:4px"><div class="topbar-brand">PERSINAS <span>ASAD</span></div></div><div class="user-badge"><span class="user-name" id="disp-un"></span><span class="role-pill" id="disp-role"></span><button class="btn-logout" onclick="doLogout()">Keluar</button></div></div>
+  <div class="topbar"><div class="topbar-left"><img src="persinas-asad-.png" alt="" style="width:28px;height:28px;object-fit:contain;border-radius:6px;margin-right:4px"><div class="topbar-brand">PERSINAS <span>ASAD</span></div></div><div class="user-badge"><span class="user-name" id="disp-un"></span><span class="role-pill" id="disp-role"></span><button id="btn-install-top" onclick="showInstallBanner(true)" style="display:none;background:var(--hj);border:none;color:#fff;padding:5px 10px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;font-family:Nunito,sans-serif;margin-right:4px">&#11015; Install</button><button class="btn-logout" onclick="doLogout()">Keluar</button></div></div>
   <div class="content">
     <div class="tab-panel" id="tab-dashboard"><div class="sec-title">DASHBOARD</div><div class="sec-sub">Rekap kehadiran semua kelompok</div><div id="dash-ov" class="dash-ov"></div><div id="dash-list"></div><button class="btn-ddl" onclick="unduhSemuaPDF()">UNDUH REKAP SEMUA KELOMPOK (PDF)</button></div>
     <div class="tab-panel" id="tab-absensi">
@@ -277,7 +277,25 @@
 <div class="mo" id="mo-sesi"><div class="mdl"><div class="mh"></div><div class="mt">Buat Sesi Latihan</div><div class="fg"><label>Tanggal</label><input type="date" id="s-tgl"></div><div class="fg"><label>Materi</label><textarea id="s-mat" style="resize:none;height:70px"></textarea></div><div class="macts"><button class="mcan" onclick="cm('mo-sesi')">Batal</button><button class="msav" onclick="buatSesi()">Buat</button></div></div></div>
 <div class="mo" id="mo-pes"><div class="mdl"><div class="mh"></div><div class="mt" id="mp-tt">Tambah Jama'ah</div><input type="hidden" id="mp-id"><div class="fg"><label>Nama Lengkap</label><input type="text" id="mp-nm"></div><div class="fg"><label>Jenis Kelamin</label><select id="mp-jk"><option value="Laki-laki">Laki-laki</option><option value="Perempuan">Perempuan</option></select></div><div class="fg"><label>Tanggal Lahir</label><input type="date" id="mp-tl"></div><div class="fg" id="mp-kw"><label>Kelompok</label><select id="mp-kl"><option value="">-- Pilih --</option></select></div><div class="macts"><button class="mcan" onclick="cm('mo-pes')">Batal</button><button class="msav" onclick="simpanP()">Simpan</button></div></div></div><div class="mo" id="mo-akun"><div class="mdl"><div class="mh"></div><div class="mt" id="ma-tt">Tambah Akun</div><input type="hidden" id="ma-id"><div class="fg"><label>Nama</label><input type="text" id="ma-nm"></div><div class="fg"><label>Username</label><input type="text" id="ma-un" autocapitalize="none" autocomplete="off"></div><div class="fg"><label>Password</label><input type="text" id="ma-pw"></div><div class="fg"><label>Kelompok</label><select id="ma-kl"><option value="">-- Pilih --</option></select></div><div class="macts"><button class="mcan" onclick="cm('mo-akun')">Batal</button><button class="msav" onclick="simpanA()">Simpan</button></div></div></div><div class="mo" id="mo-kel"><div class="mdl"><div class="mh"></div><div class="mt" id="mk-tt">Tambah Kelompok</div><input type="hidden" id="mk-id"><div class="fg"><label>Nama Kelompok</label><input type="text" id="mk-nm"></div><div class="fg"><label>Desa</label><select id="mk-desa"><option value="">-- Pilih Desa --</option></select></div><div class="macts"><button class="mcan" onclick="cm('mo-kel')">Batal</button><button class="msav" onclick="simpanK()">Simpan</button></div></div></div>
 <div class="mo" id="mo-detail"><div class="mdl"><div class="mh"></div><div class="mt" id="md-kel-tt">Detail Kelompok</div><div id="md-kel-body"><div class="ldg"><div class="spn"></div></div></div><div class="macts"><button class="mcan" onclick="cm('mo-detail')">Tutup</button></div></div></div>
-<div class="mo" id="mo-desa"><div class="mdl"><div class="mh"></div><div class="mt" id="md-tt">Tambah Desa</div><input type="hidden" id="md-id"><div class="fg"><label>Nama Desa</label><input type="text" id="md-nm"></div><div class="macts"><button class="mcan" onclick="cm('mo-desa')">Batal</button><button class="msav" onclick="simpanD()">Simpan</button></div></div></div><div class="cfmo" id="install-prompt" style="display:none;z-index:300"><div class="cfb" style="text-align:center;max-width:320px"><img src="persinas-asad-.png" style="width:80px;height:80px;object-fit:contain;border-radius:16px;margin-bottom:12px"><div style="font-family:Teko,sans-serif;font-size:22px;letter-spacing:1px;margin-bottom:4px">PERSINAS ASAD</div><div style="font-size:13px;color:var(--td);margin-bottom:16px">Pasang aplikasi ini di HP Anda untuk akses lebih mudah</div><div style="display:flex;gap:8px"><button onclick="tutupInstall()" style="flex:1;padding:12px;border-radius:8px;font-family:Nunito,sans-serif;font-size:14px;font-weight:700;cursor:pointer;border:1px solid var(--d4);background:var(--d3);color:var(--td)">Nanti</button><button onclick="pasangApp()" style="flex:2;padding:12px;border-radius:8px;font-family:Nunito,sans-serif;font-size:14px;font-weight:700;cursor:pointer;border:none;background:var(--hj);color:#fff">Pasang Sekarang</button></div></div></div><div id="rpt-cv"></div><div class="toast" id="toast"></div>
+<div class="mo" id="mo-desa"><div class="mdl"><div class="mh"></div><div class="mt" id="md-tt">Tambah Desa</div><input type="hidden" id="md-id"><div class="fg"><label>Nama Desa</label><input type="text" id="md-nm"></div><div class="macts"><button class="mcan" onclick="cm('mo-desa')">Batal</button><button class="msav" onclick="simpanD()">Simpan</button></div></div></div><div class="cfmo" id="install-prompt" style="display:none;z-index:300;align-items:flex-end;padding:0">
+  <div style="width:100%;max-width:500px;background:linear-gradient(135deg,#1a1a1a,#252525);border-top:2px solid var(--hj);border-radius:20px 20px 0 0;padding:20px 20px 28px;animation:su .3s cubic-bezier(.4,0,.2,1)">
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px">
+      <img src="persinas-asad-.png" style="width:56px;height:56px;object-fit:contain;border-radius:12px;flex-shrink:0">
+      <div style="flex:1">
+        <div style="font-family:Teko,sans-serif;font-size:20px;letter-spacing:1px;color:var(--t);line-height:1.1">Pasang PERSINAS ASAD</div>
+        <div style="font-size:12px;color:var(--td);margin-top:3px">Install ke layar utama HP Anda — gratis, cepat, offline!</div>
+      </div>
+      <button onclick="tutupInstall()" style="background:none;border:none;color:var(--td);font-size:22px;cursor:pointer;padding:4px;line-height:1;flex-shrink:0">&times;</button>
+    </div>
+    <div style="display:flex;gap:8px">
+      <button onclick="tutupInstall()" style="flex:1;padding:12px;border-radius:8px;font-family:Nunito,sans-serif;font-size:14px;font-weight:700;cursor:pointer;border:1px solid var(--d4);background:var(--d3);color:var(--td)">Nanti</button>
+      <button onclick="pasangApp()" style="flex:2;padding:12px;border-radius:8px;font-family:Nunito,sans-serif;font-size:15px;font-weight:800;cursor:pointer;border:none;background:var(--hj);color:#fff;display:flex;align-items:center;justify-content:center;gap:6px">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v13M7 10l5 5 5-5"/><path d="M3 17v2a2 2 0 002 2h14a2 2 0 002-2v-2"/></svg>
+        Pasang Sekarang
+      </button>
+    </div>
+  </div>
+</div><div id="rpt-cv"></div><div class="toast" id="toast"></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -1054,29 +1072,77 @@ async function unduhPDF(kid,kn){
   }catch(e){toast('Gagal: '+e.message,'error');}
 }
 let deferredInstall=null;
+
+function showInstallBanner(force){
+  if(localStorage.getItem('pwa_installed')) return;
+  if(!force && localStorage.getItem('pwa_remind')) return;
+  const el=document.getElementById('install-prompt');
+  if(el) el.style.display='flex';
+}
+function hideInstallBanner(){
+  const el=document.getElementById('install-prompt');
+  if(el) el.style.display='none';
+}
+
 window.addEventListener('beforeinstallprompt',e=>{
   e.preventDefault();
   deferredInstall=e;
-  if(!localStorage.getItem('pwa_installed')){
-    setTimeout(()=>{document.getElementById('install-prompt').style.display='flex';},1500);
-  }
+  // Tampilkan tombol install di topbar
+  const btn=document.getElementById('btn-install-top');
+  if(btn && !localStorage.getItem('pwa_installed')) btn.style.display='inline-block';
+  setTimeout(showInstallBanner, 1500);
 });
+
 window.addEventListener('appinstalled',()=>{
   localStorage.setItem('pwa_installed','1');
-  document.getElementById('install-prompt').style.display='none';
+  hideInstallBanner();
+  const btn=document.getElementById('btn-install-top');
+  if(btn) btn.style.display='none';
+  toast('Aplikasi berhasil dipasang!','success');
 });
+
 function pasangApp(){
-  document.getElementById('install-prompt').style.display='none';
-  if(deferredInstall){deferredInstall.prompt();deferredInstall.userChoice.then(r=>{if(r.outcome==='accepted')localStorage.setItem('pwa_installed','1');deferredInstall=null;});}
+  hideInstallBanner();
+  if(deferredInstall){
+    deferredInstall.prompt();
+    deferredInstall.userChoice.then(r=>{
+      if(r.outcome==='accepted') localStorage.setItem('pwa_installed','1');
+      deferredInstall=null;
+    });
+  } else {
+    // Fallback: panduan manual untuk iOS / browser yang tidak support prompt
+    toast('Tap ikon Share lalu pilih "Add to Home Screen"','');
+  }
 }
 function tutupInstall(){
-  document.getElementById('install-prompt').style.display='none';
+  hideInstallBanner();
+  // Tanya lagi besok
+  localStorage.setItem('pwa_remind', Date.now());
+}
+function isPWA(){
+  return window.matchMedia('(display-mode: standalone)').matches
+    || window.navigator.standalone === true;
+}
+
+// Jika sudah standalone, tandai sebagai installed
+if(isPWA()){
+  localStorage.setItem('pwa_installed','1');
 }
 document.addEventListener('keydown',e=>{if(e.key==='Enter'&&document.getElementById('login-screen').style.display!=='none')doLogin();});
 document.addEventListener('DOMContentLoaded',()=>{
   checkSaved();
   if('serviceWorker' in navigator){
     navigator.serviceWorker.register('./sw.js').catch(()=>{});
+  }
+  // Jika sudah standalone, sembunyikan banner
+  if(isPWA()){
+    localStorage.setItem('pwa_installed','1');
+    hideInstallBanner();
+  }
+  // Cek remind timer (tanya lagi setelah 1 hari)
+  const remind = localStorage.getItem('pwa_remind');
+  if(remind && Date.now() - parseInt(remind) > 86400000){
+    localStorage.removeItem('pwa_remind');
   }
 });
 </script>
