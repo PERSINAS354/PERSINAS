@@ -266,6 +266,7 @@
       </div>
       <div id="abs-list"></div>
       <div id="abs-mini" style="display:none"></div>
+      <div id="abs-riwayat" style="margin-top:4px"></div>
     </div>
     <div class="tab-panel" id="tab-peserta">
       <div class="sec-title">DAFTAR JAMA'AH</div><div class="sec-sub">Anggota kelompok latihan Anda</div>
@@ -687,11 +688,12 @@ async function renderRekap_Peserta(kelId,kelNama,desaNama){
 }
 async function initAbs(){
   hi('abs-bar');hi('abs-no');hi('abs-slc');hi('abs-rekap-row');hi('abs-mini');
-  document.getElementById('abs-list').innerHTML='';absMin=false;
+  document.getElementById('abs-list').innerHTML='';
+  document.getElementById('abs-riwayat').innerHTML='';
+  absMin=false;
   if(!CU.kelompok_id){sh('abs-no');document.getElementById('abs-no').innerHTML='<div class="es"><div class="ei">!</div>Kelompok belum terdaftar.</div>';return;}
   sh('abs-ldg');
   try{
-    // Ambil semua sesi, bukan hanya 1
     const r=await sf('sesi?kelompok_id=eq.'+CU.kelompok_id+'&order=tanggal.desc,created_at.desc');
     hi('abs-ldg');
     if(!r.length){
@@ -699,43 +701,47 @@ async function initAbs(){
       document.getElementById('abs-no').innerHTML='<div class="es"><div class="ei">!</div>Belum ada sesi.<br><br><button class="btn-p" style="width:auto;padding:10px 24px" onclick="openSM()">Buat Sesi</button></div>';
       return;
     }
-    // Cari sesi aktif (belum selesai) — prioritas utama
+    // Simpan semua sesi untuk riwayat
+    window._allSesi=r;
+    // Cari sesi aktif (belum selesai)
     const sesiAktif=r.find(s=>!s.selesai);
-    if(sesiAktif){
-      CS=sesiAktif;
-      renderSBar();
-    } else {
-      // Semua selesai — tampilkan sesi terakhir
-      CS=r[0];
-      renderSLC();
-    }
-    // Tampilkan riwayat sesi lainnya di bawah
+    if(sesiAktif){CS=sesiAktif;renderSBar();}
+    else{CS=r[0];renderSLC();}
+    // Tampilkan riwayat
     renderRiwayatSesi(r);
   }catch(e){hi('abs-ldg');toast('Gagal: '+e.message,'error');}
 }
 function renderRiwayatSesi(sesiList){
-  const container=document.getElementById('abs-list');
-  // Hapus riwayat lama kalau ada
-  const old=document.getElementById('riwayat-sesi');if(old)old.remove();
-  if(sesiList.length<=1)return;
-  const wrap=document.createElement('div');wrap.id='riwayat-sesi';
-  wrap.style.cssText='margin-top:14px';
-  const selesaiList=sesiList.filter(s=>s.selesai);
+  const container=document.getElementById('abs-riwayat');
+  container.innerHTML='';
+  // Sesi yang sudah selesai, kecuali yang sedang aktif ditampilkan
+  const selesaiList=sesiList.filter(s=>s.selesai&&s.id!==CS?.id);
   if(!selesaiList.length)return;
-  wrap.innerHTML='<div style="font-size:11px;font-weight:700;color:var(--td);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Riwayat Sesi ('+selesaiList.length+')</div>';
+  const wrap=document.createElement('div');
+  wrap.innerHTML=
+    '<div style="font-size:11px;font-weight:700;color:var(--td);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;margin-top:8px;padding-top:8px;border-top:1px solid var(--d4)">'+
+      '&#128337; Riwayat Sesi ('+selesaiList.length+')'+
+    '</div>';
   selesaiList.forEach(s=>{
     const item=document.createElement('div');
-    item.style.cssText='background:var(--d2);border:1px solid var(--d4);border-radius:10px;padding:10px 14px;margin-bottom:6px;display:flex;align-items:center;justify-content:space-between;cursor:pointer';
+    item.style.cssText='background:var(--d2);border:1px solid var(--d4);border-radius:10px;padding:10px 14px;margin-bottom:6px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;transition:border-color .2s';
     item.innerHTML=
-      '<div>'+
+      '<div style="flex:1;min-width:0">'+
         '<div style="font-size:13px;font-weight:700">'+fd(s.tanggal)+'</div>'+
-        (s.materi?'<div style="font-size:11px;color:var(--td);margin-top:1px">'+s.materi+'</div>':'')+
+        (s.materi?'<div style="font-size:11px;color:var(--td);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+s.materi+'</div>':'')+
       '</div>'+
-      '<div style="display:flex;align-items:center;gap:8px">'+
+      '<div style="display:flex;align-items:center;gap:8px;flex-shrink:0">'+
         '<span style="font-size:10px;font-weight:700;background:rgba(34,197,94,.12);color:var(--gr);padding:2px 8px;border-radius:20px;border:1px solid rgba(34,197,94,.2)">SELESAI</span>'+
-        '<span style="color:var(--td);font-size:16px">›</span>'+
+        '<span style="color:var(--td);font-size:18px;line-height:1">›</span>'+
       '</div>';
-    item.onclick=()=>{CS=s;renderSLC();wrap.remove();renderRiwayatSesi(sesiList);};
+    item.onmouseenter=()=>item.style.borderColor='var(--hj)';
+    item.onmouseleave=()=>item.style.borderColor='var(--d4)';
+    item.onclick=()=>{
+      CS=s;
+      document.getElementById('abs-riwayat').innerHTML='';
+      renderSLC();
+      renderRiwayatSesi(sesiList);
+    };
     wrap.appendChild(item);
   });
   container.appendChild(wrap);
@@ -775,6 +781,8 @@ function renderSLC(){
         '</div>'+
       '</div>';
     sh('abs-slc');
+    // Tampilkan riwayat sesi lain di bawah
+    renderRiwayatSesi(window._allSesi||[]);
   }).catch(e=>{hi('abs-ldg');toast('Gagal: '+e.message,'error');});
 }
 async function unduhRekapPDF(){
@@ -937,13 +945,27 @@ async function simpanEditSesi(){
 function hapusSesi(){
   scf('!','Hapus sesi '+fd(CS.tanggal)+'?','Data absensi juga terhapus.','Hapus',async()=>{
     try{
-      await sf('absensi?sesi_id=eq.'+CS.id,{method:'DELETE',prefer:'return=minimal'});
-      await sf('sesi?id=eq.'+CS.id,{method:'DELETE',prefer:'return=minimal'});
-      CS=null;toast('Sesi dihapus!','success');await initAbs();
+      const delId=CS.id;
+      await sf('absensi?sesi_id=eq.'+delId,{method:'DELETE',prefer:'return=minimal'});
+      await sf('sesi?id=eq.'+delId,{method:'DELETE',prefer:'return=minimal'});
+      // Hapus dari _allSesi
+      if(window._allSesi) window._allSesi=window._allSesi.filter(s=>s.id!==delId);
+      CS=null;toast('Sesi dihapus!','success');
+      await initAbs();
     }catch(e){toast('Gagal: '+e.message,'error');}
   });
 }
-async function editSL(){try{await sf('sesi?id=eq.'+CS.id,{method:'PATCH',body:JSON.stringify({selesai:false}),prefer:'return=minimal'});CS.selesai=false;hi('abs-slc');absMin=false;renderSBar();}catch(e){toast('Gagal: '+e.message,'error');}}
+async function editSL(){
+  try{
+    await sf('sesi?id=eq.'+CS.id,{method:'PATCH',body:JSON.stringify({selesai:false}),prefer:'return=minimal'});
+    CS.selesai=false;
+    // Update _allSesi
+    if(window._allSesi){const idx=window._allSesi.findIndex(s=>s.id===CS.id);if(idx>=0)window._allSesi[idx].selesai=false;}
+    hi('abs-slc');absMin=false;
+    renderSBar();
+    renderRiwayatSesi(window._allSesi||[]);
+  }catch(e){toast('Gagal: '+e.message,'error');}
+}
 async function loadAbsenPeserta(kid){
   sh('abs-ldg');hi('abs-rekap-row');hi('abs-mini');
   document.getElementById('abs-list').innerHTML='';absMin=false;
@@ -1037,7 +1059,14 @@ async function simpanAbs(){
   if(!CS)return;
   try{
     await sf('sesi?id=eq.'+CS.id,{method:'PATCH',body:JSON.stringify({selesai:true}),prefer:'return=minimal'});
-    CS.selesai=true;toast('Sesi selesai!','success');absMin=false;renderSLC();
+    CS.selesai=true;toast('Sesi selesai!','success');absMin=false;
+    // Update _allSesi
+    if(window._allSesi){
+      const idx=window._allSesi.findIndex(s=>s.id===CS.id);
+      if(idx>=0)window._allSesi[idx].selesai=true;
+    }
+    renderSLC();
+    renderRiwayatSesi(window._allSesi||[CS]);
   }catch(e){toast('Gagal: '+e.message,'error');}
 }
 function openSM(){
@@ -1056,12 +1085,12 @@ async function buatSesi(){
     const r=await sf('sesi',{method:'POST',body:JSON.stringify({tanggal:tgl,materi:mat,kelompok_id:kid})});
     if(!r||!r.length){toast('Gagal membuat sesi.','error');return;}
     CS=r[0];cm('mo-sesi');absMin=false;
-    // Reset tombol modal kembali ke Buat
     document.querySelector('#mo-sesi .msav').textContent='Buat';
     document.querySelector('#mo-sesi .msav').onclick=buatSesi;
     renderSBar();toast('Sesi dibuat!','success');
-    // Refresh riwayat
+    // Refresh semua sesi & riwayat
     const semua=await sf('sesi?kelompok_id=eq.'+kid+'&order=tanggal.desc,created_at.desc');
+    window._allSesi=semua;
     renderRiwayatSesi(semua);
   }catch(e){toast('Gagal: '+e.message,'error');}
 }
