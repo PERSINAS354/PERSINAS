@@ -352,26 +352,23 @@ async function checkSaved(){
 
   // Langsung masuk ke app pakai data lokal — TANPA tunggu server
   CU=p;
-  doAfterLoginLocal();
+  try{doAfterLoginLocal();}catch(e){console.error('doAfterLoginLocal error:',e);}
 
   // Verifikasi ke server di background (tidak blokir UI)
   try{
     const r=await sf('users?id=eq.'+p.id+'&select=id,nama,username,role,kelompok_id,kelompok_nama');
     if(!r.length){
-      // Akun dihapus dari server
       doLogout();showLogin('Sesi tidak valid. Silakan login ulang.');return;
     }
     CU=r[0];localStorage.setItem('persinas_s',JSON.stringify(CU));
-    // Refresh data di background
     await loadKL();await loadDL();
     if(CU.role==='admin'){await loadDash();}else{await initAbs();await loadPesertaPelatih();}
   }catch(netErr){
-    // Gagal koneksi — tetap di app, data dari cache
+    console.warn('Background refresh gagal:',netErr);
     toast('Koneksi bermasalah — data mungkin belum terbaru','');
   }
 }
 function doAfterLoginLocal(){
-  // Tampilkan UI langsung dari data localStorage tanpa fetch
   document.getElementById('login-screen').style.display='none';
   document.getElementById('app').style.display='flex';
   const isA=CU.role==='admin';
@@ -382,7 +379,19 @@ function doAfterLoginLocal(){
   _cP=_cD=_cK=_cA=_cR=false;expDesa.clear();expKel.clear();dashRows=null;absMin=false;
   if(isA){sh('nav-dashboard');sh('nav-kelompok');sh('nav-akun');hi('tab-absensi');hi('tab-peserta');AT='dashboard';}
   else{sh('nav-absensi');sh('nav-peserta');sh('pes-pel');hi('tab-dashboard');AT='absensi';}
-  setupNav();
+  // Setup nav tanpa trigger load data (data akan diload oleh background fetch)
+  const t=gTabs(),ind=document.getElementById('nav-ind');
+  ind.style.width=(100/t.length)+'%';ind.style.left='0%';
+  if(!t.includes(AT))AT=t[0];
+  t.forEach(x=>{
+    document.getElementById('tab-'+x).classList.toggle('active',x===AT);
+    document.getElementById('nav-'+x).classList.toggle('active',x===AT);
+  });
+  ind.style.left='0%';
+  // Tampilkan loading spinner di konten
+  const loadingHtml='<div class="ldg"><div class="spn"></div><div>Memuat data...</div></div>';
+  if(isA){document.getElementById('dash-list').innerHTML=loadingHtml;}
+  else{document.getElementById('abs-list').innerHTML=loadingHtml;}
 }
 async function safeAfterLogin(){
   try{await doAfterLogin();}
@@ -1162,13 +1171,15 @@ document.addEventListener('keydown',e=>{if(e.key==='Enter'&&document.getElementB
 document.addEventListener('DOMContentLoaded',()=>{
   // Sembunyikan login screen dulu kalau ada sesi tersimpan
   const _s=localStorage.getItem('persinas_s');
+  console.log('[PERSINAS] localStorage persinas_s:', _s ? 'ADA' : 'KOSONG');
   if(_s){
     try{
       const _p=JSON.parse(_s);
+      console.log('[PERSINAS] Data sesi:', _p&&_p.id ? 'VALID (id='+_p.id+')' : 'INVALID');
       if(_p&&_p.id){
         document.getElementById('login-screen').style.display='none';
       }
-    }catch(e){}
+    }catch(e){console.error('[PERSINAS] Parse error:',e);}
   }
   checkSaved();
   if('serviceWorker' in navigator){
