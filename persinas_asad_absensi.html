@@ -346,27 +346,29 @@ async function doLogin(){
 }
 async function checkSaved(){
   const s=localStorage.getItem('persinas_s');if(!s)return;
+  let p;
+  try{p=JSON.parse(s);}catch(e){localStorage.removeItem('persinas_s');return;}
+  if(!p||!p.id){localStorage.removeItem('persinas_s');return;}
+
+  // Langsung masuk ke app pakai data lokal — TANPA tunggu server
+  CU=p;
+  doAfterLoginLocal();
+
+  // Verifikasi ke server di background (tidak blokir UI)
   try{
-    const p=JSON.parse(s);if(!p||!p.id){localStorage.removeItem('persinas_s');return;}
-    // Langsung pakai data lokal dulu — tampilkan UI tanpa tunggu server
-    CU=p;
-    doAfterLoginLocal();
-    // Verifikasi ke server di background
-    try{
-      const r=await sf('users?id=eq.'+p.id+'&select=id,nama,username,role,kelompok_id,kelompok_nama');
-      if(!r.length){
-        // Akun sudah dihapus dari server
-        doLogout();showLogin('Sesi tidak valid. Silakan login ulang.');return;
-      }
-      CU=r[0];localStorage.setItem('persinas_s',JSON.stringify(CU));
-      // Refresh data tanpa reset UI
-      await loadKL();await loadDL();
-      if(CU.role==='admin'){await loadDash();}else{await initAbs();await loadPesertaPelatih();}
-    }catch(netErr){
-      // Gagal koneksi — tetap pakai data lokal, tampilkan peringatan
-      toast('Mode offline — data mungkin belum terbaru','');
+    const r=await sf('users?id=eq.'+p.id+'&select=id,nama,username,role,kelompok_id,kelompok_nama');
+    if(!r.length){
+      // Akun dihapus dari server
+      doLogout();showLogin('Sesi tidak valid. Silakan login ulang.');return;
     }
-  }catch(e){localStorage.removeItem('persinas_s');showLogin();}
+    CU=r[0];localStorage.setItem('persinas_s',JSON.stringify(CU));
+    // Refresh data di background
+    await loadKL();await loadDL();
+    if(CU.role==='admin'){await loadDash();}else{await initAbs();await loadPesertaPelatih();}
+  }catch(netErr){
+    // Gagal koneksi — tetap di app, data dari cache
+    toast('Koneksi bermasalah — data mungkin belum terbaru','');
+  }
 }
 function doAfterLoginLocal(){
   // Tampilkan UI langsung dari data localStorage tanpa fetch
@@ -1158,6 +1160,16 @@ if(isPWA()){
 }
 document.addEventListener('keydown',e=>{if(e.key==='Enter'&&document.getElementById('login-screen').style.display!=='none')doLogin();});
 document.addEventListener('DOMContentLoaded',()=>{
+  // Sembunyikan login screen dulu kalau ada sesi tersimpan
+  const _s=localStorage.getItem('persinas_s');
+  if(_s){
+    try{
+      const _p=JSON.parse(_s);
+      if(_p&&_p.id){
+        document.getElementById('login-screen').style.display='none';
+      }
+    }catch(e){}
+  }
   checkSaved();
   if('serviceWorker' in navigator){
     navigator.serviceWorker.register('./sw.js').catch(()=>{});
